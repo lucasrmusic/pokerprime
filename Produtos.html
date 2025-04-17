@@ -16,13 +16,12 @@
       display: flex;
       flex-direction: column;
       min-height: 100vh;
-      overflow-x: hidden; /* Evita barra de rolagem horizontal */
+      overflow-x: hidden;
     }
 
-    /* Estilo do menu superior */
     .navbar {
       background-color: #1a1a1a;
-      padding: 10px 20px;
+      padding: 15px 20px;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -38,6 +37,12 @@
       font-weight: bold;
       color: #ff5f5f;
       text-decoration: none;
+    }
+
+    .navbar .logo img {
+      height: 50px;
+      width: auto;
+      display: block;
     }
 
     .navbar .nav-links {
@@ -87,58 +92,124 @@
       background: #ff8080;
     }
 
-    /* Contêiner principal */
     .main-container {
       display: flex;
       flex-grow: 1;
-      padding-top: 60px; /* Espaço para o menu fixo */
-      min-height: calc(100vh - 60px - 200px); /* Ajusta para o rodapé */
-      transition: margin-left 0.3s ease; /* Transição suave para o conteúdo principal */
-      position: relative; /* Necessário para centralização absoluta */
+      padding-top: 60px;
+      min-height: calc(100vh - 60px - 200px);
+      transition: margin-left 0.3s ease;
+      position: relative;
     }
 
-    /* Estilos do menu lateral */
     .sidebar {
       width: 240px;
       background-color: #1a1a1a;
       padding: 20px;
       box-sizing: border-box;
-      position: absolute; /* Posicionamento absoluto para não afetar o centro */
-      top: 60px; /* Alinha abaixo do menu superior */
-      bottom: 0;
-      transition: transform 0.3s ease; /* Animação de retrair/expandir */
+      position: fixed;
+      top: 60px;
+      transition: transform 0.3s ease;
+      z-index: 999;
+      height: auto;
+      min-height: fit-content;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
     }
 
     .sidebar.retracted {
-      transform: translateX(-100%); /* Esconde o menu lateral */
+      transform: translateX(-100%);
     }
 
     .sidebar ul {
       list-style: none;
       padding: 0;
+      margin: 0;
     }
 
     .sidebar ul li {
-      padding: 12px 0;
-      border-bottom: 1px solid #333;
+      margin: 8px 0;
+      transition: transform 0.2s ease;
+    }
+
+    .sidebar ul li:last-child {
+      margin-bottom: 20px;
+    }
+
+    .sidebar ul li a {
+      display: block;
+      padding: 12px 16px;
       color: #fff;
+      text-decoration: none;
+      font-size: 16px;
       cursor: pointer;
-      transition: background 0.3s ease, transform 0.2s ease; /* Transição para destaque e zoom */
+      background-color: #2a2a2a;
+      border-radius: 8px;
+      transition: background 0.3s ease, color 0.3s ease, transform 0.2s ease;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
     }
 
-    /* Efeito de destaque e zoom ao passar o mouse */
     .sidebar ul li:hover {
-      background-color: #ff5f5f; /* Destaque em vermelho */
-      transform: scale(1.05); /* Pequeno zoom */
+      transform: scale(1.03);
     }
 
-    /* Botão de retrair/expandir */
-    .toggle-btn {
-      position: fixed; /* Fixo na tela para rolagem */
-      top: 50%; /* Centralizado verticalmente */
-      transform: translateY(-50%);
+    .sidebar ul li a:hover {
       background-color: #ff5f5f;
+      color: #000;
+      transform: translateX(5px);
+    }
+
+    .sidebar .submenu {
+      display: block;
+      list-style: none;
+      padding: 0;
+      margin: 0 0 8px 16px;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.2s ease;
+    }
+
+    .sidebar .has-submenu:hover .submenu {
+      max-height: 300px;
+      transition: max-height 1s ease;
+    }
+
+    .sidebar .has-submenu:hover ~ li,
+    .sidebar .has-submenu:hover ~ .has-submenu {
+      margin-top: 8px;
+    }
+
+    .sidebar .submenu li {
+      margin: 6px 0;
+      width: 85%;
+    }
+
+    .sidebar .submenu li a {
+      padding: 8px 12px;
+      font-size: 13px;
       color: #fff;
+      display: block;
+      background-color: #3a3a3a;
+      border-radius: 6px;
+      transition: background 0.3s ease, color 0.3s ease, transform 0.2s ease;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+    }
+
+    .sidebar .submenu li a:hover {
+      background-color: #ff5f5f;
+      color: #000;
+      transform: translateX(5px);
+    }
+
+    .sidebar:has(.has-submenu:hover) {
+      height: auto;
+      padding-bottom: 20px;
+    }
+
+    .toggle-btn {
+      position: fixed;
+      top: calc(60px + 20vh - 15px);
+      left: 240px;
+      background-color: #ff5f5f;
       border: none;
       border-radius: 50%;
       width: 30px;
@@ -147,33 +218,34 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 16px;
-      transition: left 0.3s ease; /* Transição suave para o movimento horizontal */
-      z-index: 1001; /* Garante que o botão fique acima de outros elementos */
+      padding: 1px;
+      filter: blur(0.5px);
+      transition: left 0.3s ease, filter 0.3s ease;
+      z-index: 1000;
     }
 
-    /* Ajuste da posição do botão quando o menu está retraído */
     .sidebar.retracted ~ .toggle-btn {
-      left: 0; /* Quando o menu está retraído, o botão fica na borda esquerda */
+      left: 0;
     }
 
-    .sidebar:not(.retracted) ~ .toggle-btn {
-      left: 225px; /* Quando o menu está expandido, o botão se move para a borda do menu */
+    .toggle-btn img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
     }
 
-    /* Ajuste do conteúdo principal quando o menu está retraído */
     .main-container.retracted {
-      margin-left: 0; /* Remove o espaço do menu lateral */
+      margin-left: 0;
     }
 
-    /* Estilos da seção de loja */
     .shop-section {
       flex-grow: 1;
-      padding: 20px 40px; /* Ajustado para ficar mais próximo do menu superior */
+      padding: 20px 40px;
       display: flex;
       flex-direction: column;
-      align-items: center; /* Centraliza horizontalmente */
-      width: 100%; /* Garante que o conteúdo ocupe toda a largura disponível */
+      align-items: center;
+      width: 100%;
     }
 
     .shop-section h2 {
@@ -185,83 +257,79 @@
 
     .courses {
       display: flex;
-      gap: 30px; /* Espaço entre os cards */
+      gap: 30px;
       flex-wrap: wrap;
-      justify-content: center; /* Centraliza os cards horizontalmente */
-      max-width: 1000px; /* Limita a largura para melhor visualização */
+      justify-content: center;
+      max-width: 1000px;
     }
 
     .course-card {
       background-color: #1a1a1a;
       width: 200px;
-      height: 380px; /* Altura ajustada anteriormente */
+      height: 380px;
       border-radius: 10px;
       overflow: hidden;
       position: relative;
       text-align: center;
       display: flex;
       flex-direction: column;
-      transition: transform 0.2s ease; /* Transição para o efeito de zoom */
+      transition: transform 0.2s ease;
     }
 
     .course-card:hover {
-      transform: scale(1.1); /* Zoom ajustado anteriormente */
-      z-index: 1; /* Garante que o card com zoom não invada outros */
+      transform: scale(1.1);
+      z-index: 1;
     }
 
-    /* Contêiner para a imagem */
     .course-card .image-container {
       width: 100%;
-      height: 250px; /* Aumentei a altura para que a imagem ocupe mais espaço */
-      padding: 10px; /* Margem ao redor da imagem */
+      height: 250px;
+      padding: 10px;
       box-sizing: border-box;
-      flex-shrink: 0; /* Impede que o contêiner da imagem seja comprimido */
+      flex-shrink: 0;
     }
 
     .course-card img {
       width: 100%;
-      height: 100%; /* Ajusta a imagem para preencher o contêiner */
-      object-fit: contain; /* Garante que a imagem completa seja exibida, sem cortes */
-      border-radius: 5px; /* Bordas arredondadas para a imagem */
+      height: 100%;
+      object-fit: contain;
+      border-radius: 5px;
     }
 
-    /* Estilo específico para o primeiro card com imagem de fundo */
     .course-card:first-child .image-container {
       background-image: url('Poker teste imagem.png');
-      background-size: contain; /* Garante que a imagem completa seja exibida */
+      background-size: contain;
       background-position: center;
       background-repeat: no-repeat;
-      background-color: #1a1a1a; /* Fundo do card para o caso de a imagem ter transparência */
+      background-color: #1a1a1a;
     }
 
-    /* Remover a tag <img> do primeiro card, já que usamos background-image no contêiner */
     .course-card:first-child img {
-      display: none; /* Esconde a tag <img> */
+      display: none;
     }
 
-    /* Contêiner para o título, valor e botão, alinhado na parte inferior */
     .course-card .card-footer {
-      margin-top: auto; /* Empurra para a parte inferior */
-      padding-bottom: 10px; /* Espaçamento na parte inferior do card */
-      flex-grow: 1; /* Permite que o contêiner ocupe o espaço restante */
+      margin-top: auto;
+      padding-bottom: 10px;
+      flex-grow: 1;
       display: flex;
       flex-direction: column;
-      justify-content: flex-end; /* Alinha o conteúdo no final */
+      justify-content: flex-end;
     }
 
     .course-card .card-footer h3 {
       font-size: 18px;
-      margin: 5px 0; /* Reduzi a margem para aproximar a imagem do texto */
+      margin: 5px 0;
       color: #fff;
-      padding: 0 10px; /* Adicionei padding para evitar que o texto fique muito próximo das bordas */
-      font-weight: bold; /* Garante que o título esteja em negrito */
+      padding: 0 10px;
+      font-weight: bold;
     }
 
     .course-card .price {
       font-size: 16px;
       color: #ff5f5f;
-      margin: 5px 0; /* Mesma distância entre texto e valor, e valor e botão */
-      font-weight: bold; /* Coloca o valor em negrito */
+      margin: 5px 0;
+      font-weight: bold;
     }
 
     .course-card .add-to-cart {
@@ -282,7 +350,6 @@
       background: #ff5f5f;
     }
 
-    /* Estilo do rodapé */
     footer {
       background-color: #1a1a1a;
       padding: 40px 20px;
@@ -365,7 +432,9 @@
 <body>
   <!-- Menu Superior -->
   <div class="navbar">
-    <a href="index.html" class="logo">Prime Poker</a>
+    <a href="index.html" class="logo">
+      <img src="logopequena.png" alt="Prime Poker Logo">
+    </a>
     <div class="nav-links">
       <a href="Produtos.html">Produtos</a>
       <a href="#">Blog</a>
@@ -384,14 +453,29 @@
     <!-- Menu Lateral -->
     <div class="sidebar retracted" id="sidebar">
       <ul>
-        <li>Painel</li>
-        <li>Ebooks</li>
-        <li><a href="Produtos.html" style="color: #fff; text-decoration: none;">Produtos</a></li>
-        <li>Vídeos de Coaching</li>
-        <li>Minha Conta</li>
+        <li><a href="Painel.html">Painel</a></li>
+        <li class="has-submenu">
+          <a href="Produtos.html">Loja</a>
+          <ul class="submenu">
+            <li><a href="Videos.html">Vídeos</a></li>
+            <li><a href="Ebooks.html">Ebooks</a></li>
+          </ul>
+        </li>
+        <li class="has-submenu">
+          <a href="Ranges.html">Ranges</a>
+          <ul class="submenu">
+            <li><a href="RFI10BB.html">RFI 10BB</a></li>
+            <li><a href="RFI20BB.html">RFI 20BB</a></li>
+            <li><a href="RFI40BB.html">RFI 40BB</a></li>
+            <li><a href="RFI50BB.html">RFI 50BB</a></li>
+          </ul>
+        </li>
+        <li><a href="MinhaConta.html">Minha Conta</a></li>
       </ul>
-      <button class="toggle-btn" id="toggle-btn"><i class="fas fa-chevron-right"></i></button>
     </div>
+    <button class="toggle-btn" id="toggle-btn">
+      <img src="botaoretratil.png" alt="Botão Retrátil">
+    </button>
 
     <!-- Seção de Loja -->
     <div class="shop-section">
@@ -572,10 +656,6 @@
     toggleBtn.addEventListener('click', () => {
       sidebar.classList.toggle('retracted');
       mainContainer.classList.toggle('retracted');
-      // Alterna o ícone do botão entre setas esquerda e direita
-      toggleBtn.innerHTML = sidebar.classList.contains('retracted')
-        ? '<i class="fas fa-chevron-right"></i>'
-        : '<i class="fas fa-chevron-left"></i>';
     });
 
     // Adiciona o efeito de zoom ao passar o mouse sobre o botão "Adicionar ao Carrinho"
